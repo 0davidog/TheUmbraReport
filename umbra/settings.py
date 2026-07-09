@@ -10,12 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-from pathlib import Path
 import os
+from pathlib import Path
+from dotenv import load_dotenv
 import sys
 import dj_database_url
-if os.path.isfile('env.py'):
-    import env
 import cloudinary	
 cloudinary.config( 
   	secure = True
@@ -24,15 +23,15 @@ cloudinary.config(
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
-
+load_dotenv(BASE_DIR / ".env")
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.getenv("DEBUG") == "True"
 
 ALLOWED_HOSTS = ['127.0.0.1', '.herokuapp.com']
 
@@ -111,7 +110,7 @@ WSGI_APPLICATION = 'umbra.wsgi.application'
 # }
 
 DATABASES = {
-    'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
+    'default': dj_database_url.parse(os.getenv("DATABASE_URL"))
 }
 
 if 'test' in sys.argv:
@@ -144,8 +143,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'  # SMTP server address
 EMAIL_PORT = 587  # Port number for TLS
 EMAIL_USE_TLS = True  # Use TLS (True for Gmail)
-EMAIL_HOST_USER = os.environ.get("EMAIL_USER")  # Your email address
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_PASS")  # Your email password or app password
+EMAIL_USER = os.getenv("EMAIL_USER")
+EMAIL_PASS = os.getenv("EMAIL_PASS")
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
